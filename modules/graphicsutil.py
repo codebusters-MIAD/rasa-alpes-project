@@ -3,6 +3,7 @@ import pandas as pd
 from pyspark.sql.types import NumericType
 import matplotlib.pyplot as plt
 import seaborn as sns
+import warnings
 
 def plot_numeric_box_plots(spark_df, sample_fraction=0.1):
     """
@@ -49,6 +50,7 @@ def plot_numeric_box_plots(spark_df, sample_fraction=0.1):
 def plot_correlation_heatmap(spark_df, sample_fraction=1.0):
     """
     Genera un mapa de calor de correlaciones para todas las columnas numéricas de un DataFrame de Spark.
+    Cuando los valores son demasiado altos puede afectar el resultado del diagrama
 
     Parámetros:
     - spark_df: DataFrame de Spark.
@@ -116,4 +118,25 @@ def plot_scatter(df, x_col, y_col, sample_fraction):
     plt.ylabel(y_col)
     plt.xticks(rotation=45)  # Rotar etiquetas del eje x si es necesario
     plt.tight_layout()
+    plt.show()
+
+
+def plot_pairplot(spark_df, numeric_columns):
+    """
+    Genera un gráfico de pares para las columnas numéricas de un DataFrame de Spark.
+
+    Parámetros:
+    - spark_df: DataFrame de Spark.
+    - numeric_columns: Lista de columnas numéricas a utilizar para el gráfico de pares.
+
+    Retorna:
+    - None. La función muestra el gráfico de pares.
+    """
+    # Convertir las columnas numéricas del DataFrame de Spark a un DataFrame de Pandas
+    df_nums = spark_df.select(numeric_columns).toPandas()
+
+    # Crear el gráfico de pares con seaborn
+    sns.pairplot(df_nums, diag_kind="kde", kind="reg", plot_kws={'line_kws': {'color': 'red'}})
+
+    # Mostrar el gráfico
     plt.show()
