@@ -3,7 +3,7 @@ import pandas as pd
 from pyspark.sql.types import NumericType
 import matplotlib.pyplot as plt
 import seaborn as sns
-import warnings
+from scipy.stats import pearsonr
 
 def plot_numeric_box_plots(spark_df, sample_fraction=0.1):
     """
@@ -121,9 +121,11 @@ def plot_scatter(df, x_col, y_col, sample_fraction):
     plt.show()
 
 
-def plot_pairplot(spark_df, numeric_columns):
+
+# %%
+def plot_pairplot_with_corr(spark_df, numeric_columns):
     """
-    Genera un gráfico de pares para las columnas numéricas de un DataFrame de Spark.
+    Genera un gráfico de pares con coeficientes de correlación para las columnas numéricas de un DataFrame de Spark.
 
     Parámetros:
     - spark_df: DataFrame de Spark.
@@ -135,8 +137,13 @@ def plot_pairplot(spark_df, numeric_columns):
     # Convertir las columnas numéricas del DataFrame de Spark a un DataFrame de Pandas
     df_nums = spark_df.select(numeric_columns).toPandas()
 
-    # Crear el gráfico de pares con seaborn
-    sns.pairplot(df_nums, diag_kind="kde", kind="reg", plot_kws={'line_kws': {'color': 'red'}})
+    def corrfunc(x, y, **kws):
+        r, _ = pearsonr(x, y)
+        ax = plt.gca()
+        ax.annotate(f"r = {r:.2f}", xy=(0.5, 0.1), xycoords=ax.transAxes, ha='center', fontsize=10)
 
-    # Mostrar el gráfico
+    # Crear el gráfico de pares con seaborn
+    sns.pairplot(df_nums, diag_kind="kde", kind="reg", plot_kws={'line_kws': {'color': 'red'}},
+                 markers="+").map_lower(corrfunc)
+
     plt.show()
