@@ -108,18 +108,17 @@ CREATE TABLE Rs_HechoPlanesTiposBeneficio
 (
     IdProveedor_DWH                INT NOT NULL,
     IdFechaEmision                 INT NOT NULL,
-    IdPlan_DD                      INT NOT NULL,
+    IdPlan_DD                      NVARCHAR(100) NOT NULL,
     IdAreaDeServicio_DWH           INT NOT NULL,
     IdNivelDeServicio_DWH          INT NOT NULL,
     IdTipoBeneficio_DWH            INT NOT NULL,
     IdCondicionesTipoBeneficio_DWH INT NOT NULL,
     IdCondicionDePagoCoseguro_DWH  INT NOT NULL,
     IdCondicionDePagoCopago_DWH    INT NOT NULL,
-    -- el no null aca no es requerido porque el motor de base de datos cuando usa funciones de agregación descarta los nulos
     ValorCoseguro                  DECIMAL(18, 2),
     ValorCopago                    DECIMAL(18, 2),
     CantidadLimite                 INT,
-    PRIMARY KEY (IdProveedor_DWH, IdFechaEmision, IdAreaDeServicio_DWH, IdNivelDeServicio_DWH, IdTipoBeneficio_DWH, IdCondicionesTipoBeneficio_DWH, IdCondicionDePagoCoseguro_DWH, IdCondicionDePagoCopago_DWH),
+    PRIMARY KEY (IdProveedor_DWH, IdFechaEmision, IdPlan_DD, IdAreaDeServicio_DWH, IdNivelDeServicio_DWH, IdTipoBeneficio_DWH, IdCondicionesTipoBeneficio_DWH, IdCondicionDePagoCoseguro_DWH, IdCondicionDePagoCopago_DWH),
     FOREIGN KEY (IdProveedor_DWH) REFERENCES Rs_Proveedor (IdProveedor_DWH),
     FOREIGN KEY (IdFechaEmision) REFERENCES Rs_Fecha (IdFecha),
     FOREIGN KEY (IdAreaDeServicio_DWH) REFERENCES Rs_AreasDeServicio (IdAreaDeServicio_DWH),
@@ -129,7 +128,6 @@ CREATE TABLE Rs_HechoPlanesTiposBeneficio
     FOREIGN KEY (IdCondicionDePagoCoseguro_DWH) REFERENCES Rs_CondicionDePago (IdCondicionDePago_DWH),
     FOREIGN KEY (IdCondicionDePagoCopago_DWH) REFERENCES Rs_CondicionDePago (IdCondicionDePago_DWH)
 );
-
 
 ALTER TABLE Rs_Proveedor
     ADD INDEX idx_IdProveedor_T (IdProveedor_T);
