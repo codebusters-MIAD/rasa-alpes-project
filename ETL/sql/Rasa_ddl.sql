@@ -37,7 +37,7 @@ CREATE TABLE Rs_TiposBeneficio
 );
 
 
-CREATE TABLE Rs_Fecha
+CREATE TABLE Rs_Fecha_T
 (
     IdFecha INT PRIMARY KEY,
     Fecha   DATE NOT NULL,
